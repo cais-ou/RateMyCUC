@@ -14,4 +14,8 @@ export class UpdateUserDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  role:string;
 }

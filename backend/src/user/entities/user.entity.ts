@@ -23,6 +23,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column()
+  role: string;
+
   @OneToMany(() => Review, (review) => review.author)
   authoredReviews: Review[];
 

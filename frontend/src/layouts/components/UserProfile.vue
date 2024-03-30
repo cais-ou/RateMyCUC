@@ -1,5 +1,20 @@
 <script setup lang="ts">
 import avatar1 from '@images/avatars/avatar-1.png';
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const isLogged = computed (() => authStore.isLoggedIn);
+const handleAvatarClick = () => {
+  if(!isLogged.value){
+    router.push('/login');
+  }
+}
+const userName = computed(() => authStore.user?.username );
+const userRole = computed(() => authStore.user?.role );
 </script>
 
 <template>
@@ -15,6 +30,7 @@ import avatar1 from '@images/avatars/avatar-1.png';
       class="cursor-pointer"
       color="primary"
       variant="tonal"
+      @click="handleAvatarClick"
     >
       <VImg :src="avatar1" />
 
@@ -48,9 +64,9 @@ import avatar1 from '@images/avatars/avatar-1.png';
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{userName}}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>{{userRole}}</VListItemSubtitle>
           </VListItem>
           <VDivider class="my-2" />
 
@@ -64,11 +80,11 @@ import avatar1 from '@images/avatars/avatar-1.png';
               />
             </template>
 
-            <VListItemTitle>Profile</VListItemTitle>
+            <VListItemTitle>主页</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Settings -->
-          <VListItem link>
+          <!-- 👉 FAQ -->
+          <VListItem link v-if="userRole === 'admin'" :to="'/role'">
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -77,33 +93,7 @@ import avatar1 from '@images/avatars/avatar-1.png';
               />
             </template>
 
-            <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 Pricing -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-currency-usd"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 FAQ -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-help-circle-outline"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>FAQ</VListItemTitle>
+            <VListItemTitle>角色管理</VListItemTitle>
           </VListItem>
 
           <!-- Divider -->

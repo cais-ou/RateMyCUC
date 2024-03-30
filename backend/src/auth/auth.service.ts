@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -35,11 +36,16 @@ export class AuthService {
     if (existingUser) {
       throw new ConflictException('Username already taken');
     }
+
+    const response = await axios.post('http://localhost:5000/assign-role', {})
+    const role = response.data.role;
+
     const hashedPassword = await bcrypt.hash(createUserDto.password, 8);
     const res = await this.userService.create({
       username: createUserDto.username,
       email: createUserDto.email,
       password: hashedPassword,
+      role,
     });
     delete res.password;
 

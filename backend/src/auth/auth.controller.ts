@@ -8,15 +8,21 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { UserService } from 'src/user/user.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CreateUserDto } from '../user/dto/create-user-dto';
 import { LoggedInGuard } from './guards/local.guard';
 import { LoginDto } from '../user/dto/login-dto';
+import { RolesGuard } from './guards/role.guard';
+import { Roles } from './guards/role.decorator';
 
 @ApiTags('auth')
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
@@ -50,6 +56,15 @@ export class AuthController {
         reject(new Error('User registration failed.'));
       }
     });
+  }
+
+  @UseGuards(LoggedInGuard, RolesGuard) // 使用LoggedInGuard确保用户已登录，RolesGuard用于角色检查
+  @Roles('admin') // 指定只有admin角色用户才能访问
+  @Get('/auth/users')
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({ status: 200, description: 'Users retrieved successfully.' })
+  async findAllUsers() {
+    return await this.userService.findAllUser();
   }
 
   @UseGuards(LoggedInGuard)

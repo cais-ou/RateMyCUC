@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/authStore';
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue';
 import { useTheme } from 'vuetify';
 import * as yup from 'yup';
-
 import logo from '@images/logo.svg?raw';
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png';
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png';
@@ -33,10 +32,10 @@ const { useFieldModel, errors, handleSubmit } = useForm({
   validationSchema: schema,
 })
 
-const [password, email] = useFieldModel(['password', 'email'])
+const [password, email,role] = useFieldModel(['password', 'email', 'role'])
 
 const onSubmit = handleSubmit((values) => {
-  authStore.login(values.email, values.password)
+  authStore.login(values.email, values.password, values.role)
   .then(() => {
       if (authStore.isLoggedIn) {
         router.push('/main')

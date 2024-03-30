@@ -50,8 +50,11 @@ const newDialog = ref(false)
 </script>
 
 <template>
-  <VDialog v-model="newDialog" max-width="600px">
-    <VCard style="background-color: transparent;">
+  <VDialog
+    v-model="newDialog"
+    max-width="600px"
+  >
+    <VCard style="background-color: transparent">
       <VResponsive max-width="600px">
         <VAutocomplete
           v-model:search="values"

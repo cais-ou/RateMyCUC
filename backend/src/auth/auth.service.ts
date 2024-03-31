@@ -48,10 +48,6 @@ export class AuthService {
       role,
     });
     delete res.password;
-
-    // TODO: 'Send email.'
-    // this.sendEmailVerificationMail(res);
-
     return {
       user: res,
     };

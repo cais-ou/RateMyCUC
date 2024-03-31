@@ -39,6 +39,10 @@ const router = createRouter({
         {
           path:'role',
           component: () => import('../pages/role.vue'),
+        },
+        {
+          path:'certification',
+          component: () => import('../pages/certification.vue')
         }
       ],
     },

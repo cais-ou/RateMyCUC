@@ -2,8 +2,17 @@
 import logo from '@images/logo.png'
 import { useCourseStore } from '@/stores/courseStore'
 import router from '@/router'
+import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
 
 const courseStore = useCourseStore()
+
+const verified = ref(false)
+
+onMounted(() => {
+  const route = useRoute()
+  verified.value = route.query.verified === 'true'
+})
 
 const items = ref([] as string[])
 const values = ref('')

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { emit } from 'process';
 
 @Injectable()
 export class UserService {
@@ -60,6 +61,16 @@ export class UserService {
   async updatePassword(userId: number, password: string): Promise<User> {
     const user = await this.findById(userId);
     user.password = password;
+    return this.usersRepository.save(user);
+  }
+
+  async userAuthentication(email: string): Promise<User> {
+    const user = await this.findOneByEmail(email);
+    console.log(email)
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    user.role = 'authenticator';
     return this.usersRepository.save(user);
   }
 }

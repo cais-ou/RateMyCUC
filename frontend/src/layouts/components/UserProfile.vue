@@ -96,6 +96,18 @@ const userRole = computed(() => authStore.user?.role );
             <VListItemTitle>角色管理</VListItemTitle>
           </VListItem>
 
+          <VListItem link v-if="userRole === 'visitor'" :to="'/certification'">
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="mdi-cog-outline"
+                size="22"
+              />
+            </template>
+
+            <VListItemTitle>用户认证</VListItemTitle>
+          </VListItem>
+
           <!-- Divider -->
           <VDivider class="my-2" />
 

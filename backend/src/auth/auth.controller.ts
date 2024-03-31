@@ -67,6 +67,16 @@ export class AuthController {
     return await this.userService.findAllUser();
   }
 
+  @Post('/auth/authentication')
+  @ApiOperation({ summary: 'Authenticate user by email' })
+  @ApiResponse({ status: 200, description: 'User authenticated successfully.' })
+  async authenticateUserByEmail(@Body('email') email: string): Promise<any> {
+    return this.userService.userAuthentication(email)
+      .then(user => ({ message: `User with email ${user.email} authenticated successfully.` }))
+      .catch(error => ({ error: error.message }));
+  }
+
+
   @UseGuards(LoggedInGuard)
   @Get('profile')
   @ApiOperation({ summary: 'Get profile' })

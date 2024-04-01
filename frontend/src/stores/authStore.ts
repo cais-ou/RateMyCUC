@@ -51,6 +51,22 @@ export const useAuthStore = defineStore('auth', {
         console.error('获取所有用户信息失败:',err);
       }
     },
+    async makeVisitor(userId:string) {
+      try {
+        await axiosInstance.patch(`http://localhost:5000/user/${userId}/make_visitor`);
+      } catch (err) {
+        console.error('设置用户角色为visitor失败:', err);
+      }
+    },
+    
+    async makeAuthenticator(userId:string) {
+      try {
+        await axiosInstance.patch(`http://localhost:5000/user/${userId}/make_authenticator`);
+      } catch (err) {
+        console.error('设置用户角色为authenticator失败:', err);
+      }
+    },
+    
     async register(username: string, email: string, password: string) {
       try {
         const response = await axiosInstance.post('/api/auth/register', {

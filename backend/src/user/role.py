@@ -153,5 +153,23 @@ def confirm_email(token):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/user/<int:user_id>/make_visitor', methods=['PATCH'])
+def make_user_visitor(user_id):
+    return change_user_role(user_id, 'visitor')
+
+@app.route('/user/<int:user_id>/make_authenticator', methods=['PATCH'])
+def make_user_authenticator(user_id):
+    return change_user_role(user_id, 'authenticator')
+
+def change_user_role(user_id, new_role):
+    user = User.query.get(user_id)
+    if user:
+        user.role = new_role
+        db.session.commit()
+        return jsonify({'success': f'User role updated successfully to {new_role}.'})
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useReviewStore } from '../../../stores/reviewStore'
+import { useAuthStore } from '@/stores/authStore'
+import { computed } from 'vue';
 
 interface Props {
   classID?: number
@@ -9,6 +11,9 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   classID: 0,
 })
+
+const authStore = useAuthStore();
+const userRole = computed(() => authStore.user?.role );
 
 const reviewStore = useReviewStore()
 const newTagDialog = ref(false)
@@ -25,6 +30,15 @@ const submitTag = (classID: number | undefined) => {
     useReviewStore().addTag(classID, newTag.value)
     newTag.value = ''
     newTagDialog.value = false
+  }
+}
+
+const handleAddTagClick = () => {
+  const role = userRole.value;
+  if (role === 'admin' || role === 'authenticator') {
+    newTagDialog.value = true;
+  } else {
+    alert('访客无法添加Tag，请前往角色认证升级权限');
   }
 }
 </script>
@@ -47,7 +61,7 @@ const submitTag = (classID: number | undefined) => {
       </VChip>
     </div>
     <VCardActions class="align-self-end">
-      <VBtn @click="newTagDialog = true">
+      <VBtn @click="handleAddTagClick">
         添加 Tag
       </VBtn>
     </VCardActions>

@@ -2,7 +2,12 @@
 <!-- eslint-disable import/no-unresolved -->
 <script setup lang="ts">
 import { useReviewStore } from '@/stores/reviewStore'
+import { useAuthStore } from '@/stores/authStore'
+import { computed } from 'vue';
 
+
+const authStore = useAuthStore();
+const userRole = computed(() => authStore.user?.role );
 const reviewStore = useReviewStore()
 
 const outlined = ref(true)
@@ -21,6 +26,16 @@ const score = ref(0)
 const difficulty = ref(0)
 const gain = ref(0)
 const title = ref('')
+
+const handleAddReviewClick = () => {
+  const role = userRole.value;
+  if (role === 'admin' || role === 'authenticator') {
+    dialog.value = true;
+  } else {
+    alert('访客无法评论，请前往角色认证升级权限');
+    dialog.value=false;
+  }
+}
 
 const handleSubmit = async () => {
   try {
@@ -60,6 +75,7 @@ const handleSubmit = async () => {
         color="primary"
         v-bind="props"
         class="fixed-button"
+        @click="handleAddReviewClick"
       >
         <VIcon icon="mdi-pencil" />
         写评论

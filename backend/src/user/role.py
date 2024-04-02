@@ -35,7 +35,7 @@ class User(db.Model):
 @app.route('/user', methods=['POST'])
 def create_user():
     data = request.json
-    new_user = User(email=data['email'], username=data['username'], password=data['password'], role=data['role'])
+    new_user = User(email=data['email'], username=data['username'], password=data['password'], role='visitor')
     db.session.add(new_user)
     try:
         db.session.commit()
@@ -153,11 +153,12 @@ def confirm_email(token):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
+#修改角色逻辑
 @app.route('/user/<int:user_id>/make_visitor', methods=['PATCH'])
 def make_user_visitor(user_id):
     return change_user_role(user_id, 'visitor')
 
+#修改角色逻辑
 @app.route('/user/<int:user_id>/make_authenticator', methods=['PATCH'])
 def make_user_authenticator(user_id):
     return change_user_role(user_id, 'authenticator')

@@ -26,9 +26,11 @@ const form = ref({
 const registerStore = useAuthStore()
 
 const schema = yup.object({
-  username: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8, 'must be at least 8 characters long').required(),
+  username: yup.string().required('请输入用户名'),
+  email: yup.string().email('请输入真实可用邮箱') // Update this line to include a custom message for invalid email format
+    .matches(/^[^@]+@cuc\.edu\.cn$/, {message: '邮箱必须以@cuc.edu.cn结尾', excludeEmptyString: true}) // Ensure the email ends with @cuc.edu.cn
+    .required('请输入真实可用的cuc 邮箱'), // Custom message for the required field
+  password: yup.string().min(8, '必须至少8位数').required('请输入密码'),
 })
 
 const { useFieldModel, errors, handleSubmit } = useForm({

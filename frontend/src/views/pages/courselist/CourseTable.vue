@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
-
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/authStore'
+import router from '@/router'
 import { useCourseStore } from '@/stores/courseStore'
 
 // Define component props
@@ -11,6 +13,9 @@ const props = defineProps({
     required: true,
   },
 })
+
+const authStore = useAuthStore();
+const isLogged = computed (() => authStore.isLoggedIn);
 
 // Define table headers
 const headers = [
@@ -42,6 +47,9 @@ const fetchCourseList = async () => {
 // Toggle card details visibility
 const toggleCardDetails = () => {
   isCardDetailsVisible.value = !isCardDetailsVisible.value
+  if(!isLogged.value){
+    router.push('/login');
+  }
   if (isCardDetailsVisible.value)
     fetchCourseList().then(() => {})
 }

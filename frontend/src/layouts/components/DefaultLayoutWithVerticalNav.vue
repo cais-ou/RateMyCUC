@@ -11,10 +11,15 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 
 // Search
 import { useCourseStore } from '@/stores/courseStore'
+
+// Login
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/authStore'
 import router from '@/router'
 
 const vuetifyTheme = useTheme()
-
+const authStore = useAuthStore();
+const isLogged = computed (() => authStore.isLoggedIn);
 const courseStore = useCourseStore()
 
 const items = ref([] as string[])
@@ -27,12 +32,25 @@ const fetchSuggestions = async (value: string) => {
   items.value = courseStore.suggestions
 }
 
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key === 'Enter')
-    router.push(`/search?keyword=${values.value}`).then(() => {
-      newDialog.value = false
-    })
+const handleAvatarClick = () => {
+  if(!isLogged.value){
+    router.push('/login');
+  }
 }
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    if (!isLogged.value) {
+      router.push('/login');
+    } else {
+      router.push(`/search?keyword=${values.value}`).then(() => {
+        console.log(isLogged.value)
+        newDialog.value = false
+      });
+    }
+  }
+}
+
 
 watch(
   values,
@@ -151,8 +169,9 @@ const newDialog = ref(false)
         :item="{
           title: '课程列表',
           icon: 'mdi-table',
-          to: '/courselist',
+          to:'/courselist',
         }"
+        @click="handleClick"
       />
       <VerticalNavLink
         :item="{

@@ -4,8 +4,13 @@ import { useCourseStore } from '@/stores/courseStore'
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/authStore'
 
 const courseStore = useCourseStore()
+
+const authStore = useAuthStore();
+const isLogged = computed (() => authStore.isLoggedIn);
 
 const verified = ref(false)
 
@@ -25,9 +30,14 @@ const fetchSuggestions = async (value: string) => {
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key === 'Enter')
-    router.push(`/search?keyword=${values.value}`)
-}
+  if (event.key === 'Enter') {
+    if (!isLogged.value) {
+      router.push('/login');
+    } else {
+      router.push(`/search?keyword=${values.value}`)
+      };
+    }
+  }
 
 watch(values, newValue => {
   if (timerId)

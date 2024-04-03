@@ -19,6 +19,7 @@ watch(
   },
   { immediate: true },
 )
+
 onMounted(async () => {
   await reviewStore.fetchCourse(classID) // replace this with the actual id of the course
 })

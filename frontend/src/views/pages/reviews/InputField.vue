@@ -4,7 +4,8 @@
 import { useReviewStore } from '@/stores/reviewStore'
 import { useAuthStore } from '@/stores/authStore'
 import { computed } from 'vue';
-
+const route = useRoute()
+const courseId = parseInt(route.params.classID as string)
 
 const authStore = useAuthStore();
 const userRole = computed(() => authStore.user?.role );
@@ -18,8 +19,7 @@ const errorMessages = ref(null)
 const maxWidth = ref<number>(900)
 const dialog = ref(false)
 
-const courseId = ref(1)
-const authorId = ref(1)
+const authorId = computed(() => authStore.user?.id)
 const content = ref('')
 const rate = ref(0)
 const score = ref(0)
@@ -40,7 +40,7 @@ const handleAddReviewClick = () => {
 const handleSubmit = async () => {
   try {
     await reviewStore.submitReview(
-      courseId.value,
+      courseId,
       authorId.value,
       difficulty.value,
       gain.value,

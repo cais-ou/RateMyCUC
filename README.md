@@ -18,6 +18,10 @@
 
   搭建数据库
 
+  - 存在两个`docker-compose.yml`
+  - 若只配置基础数据库（不包含搜索功能），则位于`backend`
+  - 若要配置完整功能，则位于`backend --> data`
+
 - Step5:成功执行命令后打开`docker`，数据库即上线成功
 
 

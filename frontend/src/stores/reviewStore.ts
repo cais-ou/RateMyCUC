@@ -85,6 +85,18 @@ export const useReviewStore = defineStore({
 
       this.course = await response.data
     },
+    async deleteReview(id:number){
+      try{
+        await axiosInstance.delete(`/api/reviews/${id}`);
+      // 从当前课程评论列表中移除被删除的评论
+      if (this.course && this.course.reviews) {
+        this.course.reviews = this.course.reviews.filter(review => review.id !== id);
+      }
+    }catch(error){
+      console.error(`Failed to delete review with ID ${id}:`, error);
+      throw error; 
+    }
+  },
     async upvoteTag(courseId: number, tagId: number) {
       await axiosInstance.post(`/api/courses/${courseId}/tags/${tagId}/upvote`)
       await this.fetchCourse(courseId)

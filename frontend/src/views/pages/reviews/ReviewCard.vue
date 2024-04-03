@@ -1,8 +1,29 @@
 <script setup lang="ts">
 // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+import { useReviewStore } from '@/stores/reviewStore'
+import { useAuthStore } from '@/stores/authStore'
+import { computed } from 'vue';
+const authStore = useAuthStore();
+const userRole = computed(() => authStore.user?.role );
+const reviewStore = useReviewStore()
 const props = defineProps({
   review: Object,
 })
+
+const handleDeleteReview = async (id) => {
+  // 确认用户操作
+  if (window.confirm('确定要删除这条评论吗？')) {
+    try {
+      await reviewStore.deleteReview(id);
+      // 可选：显示删除成功的消息
+      alert('评论已删除。');
+    } catch (error) {
+      // 错误处理：显示错误消息
+      alert('删除评论失败，请稍后再试。');
+      console.error('删除评论时发生错误:', error);
+    }
+  }
+};
 
 const isCardDetailsVisible = ref(false)
 
@@ -63,6 +84,9 @@ const comments = [
         <VIcon icon="mdi-thumb-down-outline" />
         <span>{{ review.downvoteCount }}</span>
       </VBtn>
+      <VBtn icon color="primary" v-if="userRole === 'admin'" @click="handleDeleteReview(review.id)">
+         <VIcon>mdi-delete</VIcon>
+     </VBtn>
     </VCardActions>
     <VCardActions>
       <VBtn @click="isCardDetailsVisible = !isCardDetailsVisible">

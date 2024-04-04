@@ -172,5 +172,17 @@ def change_user_role(user_id, new_role):
     else:
         return jsonify({'error': 'User not found'}), 404
 
+@app.route('/check-role', methods=['POST'])
+def check_role():
+    data = request.json
+    user_role = data.get('role')
+
+    # 检查角色是否为admin
+    if user_role == 'admin':
+        return jsonify({'is_allowed': True})
+    else:
+        return jsonify({'is_allowed': False})
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -15,6 +15,15 @@ const handleAvatarClick = () => {
 }
 const userName = computed(() => authStore.user?.username );
 const userRole = computed(() => authStore.user?.role );
+
+const showRoleManagement = ref(false);
+
+onMounted(async () => {
+  const userRole = authStore.user?.role; // 假设这里已经有用户角色信息
+  if (userRole) {
+    showRoleManagement.value = await authStore.checkAdminRole(userRole);
+  }
+});
 </script>
 
 <template>
@@ -84,7 +93,7 @@ const userRole = computed(() => authStore.user?.role );
           </VListItem>
 
           <!-- 👉 FAQ -->
-          <VListItem link v-if="userRole === 'admin'" :to="'/role'">
+          <VListItem link v-if="showRoleManagement" :to="'/role'">
             <template #prepend>
               <VIcon
                 class="me-2"

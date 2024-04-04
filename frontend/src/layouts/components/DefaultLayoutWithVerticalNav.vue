@@ -121,14 +121,11 @@ const newDialog = ref(false)
 
         <IconBtn
           class="me-2"
-          href="https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free"
+          href="https://github.com/odulme/RateMyCUC"
           target="_blank"
           rel="noopener noreferrer"
         >
           <VIcon icon="mdi-github" />
-        </IconBtn>
-        <IconBtn class="me-2">
-          <VIcon icon="mdi-bell-outline" />
         </IconBtn>
 
         <NavbarThemeSwitcher class="me-2" />

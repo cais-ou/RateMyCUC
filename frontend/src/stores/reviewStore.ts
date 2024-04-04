@@ -97,6 +97,20 @@ export const useReviewStore = defineStore({
       throw error; 
     }
   },
+    async upvoteReview(id:number,authorId:number){
+      try{
+        await axiosInstance.patch(`/api/reviews/${id}/upvote`, { authorId });
+      }catch (error) {
+        console.error('Failed to upvote review:', error);
+      }
+    },
+    async downvoteReview(id:number,authorId:number){
+      try{
+        await axiosInstance.patch(`/api/reviews/${id}/downvote`, { authorId });
+      }catch (error) {
+        console.error('Failed to upvote review:', error);
+      }
+    },
     async upvoteTag(courseId: number, tagId: number) {
       await axiosInstance.post(`/api/courses/${courseId}/tags/${tagId}/upvote`)
       await this.fetchCourse(courseId)

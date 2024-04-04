@@ -7,7 +7,7 @@
       Made With
       <VIcon icon="mdi-heart-outline" color="error" size="1.25rem" class="mx-1" />
       By <a href="https://github.com/BloodyOrangeMan/RateMyCUC" target="_blank" rel="noopener noreferrer"
-        class="text-primary ms-1">CUC Haters</a>
+        class="text-primary ms-1">CUC Programmers</a>
     </span>
     <!-- 👉 Footer: right content -->
     <span class="d-md-flex gap-x-4 text-primary d-none">

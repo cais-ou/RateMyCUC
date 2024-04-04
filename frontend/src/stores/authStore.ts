@@ -27,6 +27,16 @@ export const useAuthStore = defineStore('auth', {
         this.logout()
       }
     },
+    // 在authStore中添加
+    async checkAdminRole(role:string) {
+      try {
+        const response = await axiosInstance.post('http://localhost:5000/check-role', { role });
+        return response.data.is_allowed;
+      } catch (error) {
+        console.error('Error checking role:', error);
+        return false;
+      }
+    },
     async fetchUserProfile() {
       try {
         const response = await axiosInstance.get('/api/profile', {

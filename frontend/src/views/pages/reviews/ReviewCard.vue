@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { computed } from 'vue';
 const authStore = useAuthStore();
 const userRole = computed(() => authStore.user?.role );
+const userId = computed(() => authStore.user?.id);
 const reviewStore = useReviewStore()
 const props = defineProps({
   review: Object,
@@ -21,6 +22,43 @@ const handleDeleteReview = async (id) => {
       // 错误处理：显示错误消息
       alert('删除评论失败，请稍后再试。');
       console.error('删除评论时发生错误:', error);
+    }
+  }
+};
+const handleUpvoteReview = async () => {
+  try {
+    await reviewStore.upvoteReview(props.review.id, userId.value);
+    // 直接增加点赞数
+    props.review.upvoteCount += 1;
+  } catch (error) {
+    // 特别处理409错误
+    if (error.response && error.response.status === 409) {
+      alert('你已经对这条评论点过赞了。');
+      props.review.upvoteCount -= 1;
+    } else {
+      console.error('点赞失败:', error);
+      alert('点赞失败，请稍后再试。');
+      // 回滚点赞数的增加
+      props.review.upvoteCount -= 1;
+    }
+  }
+};
+
+const handleDownvoteReview = async () => {
+  try {
+    await reviewStore.downvoteReview(props.review.id, userId.value);
+    // 直接增加踩数
+    props.review.downvoteCount += 1;
+  } catch (error) {
+    // 特别处理409错误
+    if (error.response && error.response.status === 409) {
+      alert('你已经对这条评论踩过了。');
+      props.review.downvoteCount -= 1;
+    } else {
+      console.error('踩失败:', error);
+      alert('踩失败，请稍后再试。');
+      // 回滚踩数的增加
+      props.review.downvoteCount -= 1;
     }
   }
 };
@@ -76,17 +114,17 @@ const comments = [
       <div v-html="review.content" />
     </VCardText>
     <VCardActions>
-      <VBtn>
+      <VBtn @click="handleUpvoteReview(review.id)">
         <VIcon icon="mdi-thumb-up-outline" />
         <span>{{ review.upvoteCount }}</span>
       </VBtn>
-      <VBtn>
+      <VBtn @click="handleDownvoteReview(review.id)">
         <VIcon icon="mdi-thumb-down-outline" />
         <span>{{ review.downvoteCount }}</span>
       </VBtn>
       <VBtn icon color="primary" v-if="userRole === 'admin'" @click="handleDeleteReview(review.id)">
-         <VIcon>mdi-delete</VIcon>
-     </VBtn>
+        <VIcon>mdi-delete</VIcon>
+      </VBtn>
     </VCardActions>
     <VCardActions>
       <VBtn @click="isCardDetailsVisible = !isCardDetailsVisible">
